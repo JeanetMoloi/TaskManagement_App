@@ -24,12 +24,7 @@ class TaskControllerPTJ extends Controller
      * Apply auth middleware to all routes in this controller.
      * Guest users cannot access any task functionality.
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-        
-        $this->middleware('role:admin,team_member')->only(['create', 'store', 'edit', 'update', 'destroy']);
-    }
+    
 
     /**
      * Display a listing of tasks.
