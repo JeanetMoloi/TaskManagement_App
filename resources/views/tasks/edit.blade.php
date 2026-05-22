@@ -1,130 +1,90 @@
-<x-app-layout>
+@extends('layouts.app')
 
-    <div class="max-w-2xl mx-auto mt-10 bg-white shadow-xl rounded-2xl p-8">
+@section('title', 'Edit Task')
 
-        <h1 class="text-3xl font-bold mb-6 text-gray-800">
-            Edit Task
-        </h1>
+@section('topbar-actions')
+    <a href="{{ route('tasks.show', $task) }}" class="btn btn-ghost">← Back</a>
+@endsection
 
-        <form method="POST" action="/tasks/{{ $task->id }}">
+@section('content')
 
-            @csrf
-            @method('PUT')
+<div style="max-width:680px;">
+    <div class="card">
+        <form method="POST" action="{{ route('tasks.update', $task) }}">
+            @csrf @method('PUT')
 
-            <!-- Title -->
-            <div class="mb-5">
-
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Task Title
-                </label>
-
-                <input
-                    type="text"
-                    name="title"
-                    value="{{ $task->title }}"
-                    class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                >
-
+            <div class="form-group">
+                <label class="form-label">Task Title *</label>
+                <input type="text" name="title" class="form-control" value="{{ old('title', $task->title) }}" required>
+                @error('title')<div class="form-error">{{ $message }}</div>@enderror
             </div>
 
-            <!-- Description -->
-            <div class="mb-5">
-
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Description
-                </label>
-
-                <textarea
-                    name="description"
-                    rows="5"
-                    class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                >{{ $task->description }}</textarea>
-
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" rows="4">{{ old('description', $task->description) }}</textarea>
+                @error('description')<div class="form-error">{{ $message }}</div>@enderror
             </div>
 
-            <!-- Priority -->
-            <div class="mb-5">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="form-group">
+                    <label class="form-label">Priority *</label>
+                    <select name="priority" class="form-control" required>
+                        <option value="low" {{ old('priority', $task->priority) == 'low' ? 'selected' : '' }}>🟢 Low</option>
+                        <option value="medium" {{ old('priority', $task->priority) == 'medium' ? 'selected' : '' }}>🟡 Medium</option>
+                        <option value="high" {{ old('priority', $task->priority) == 'high' ? 'selected' : '' }}>🔴 High</option>
+                    </select>
+                    @error('priority')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
 
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Priority
-                </label>
+                <div class="form-group">
+                    <label class="form-label">Status *</label>
+                    <select name="status" class="form-control" required>
+                        <option value="pending" {{ old('status', $task->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="in_progress" {{ old('status', $task->status) == 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                        <option value="completed" {{ old('status', $task->status) == 'completed' ? 'selected' : '' }}>Completed</option>
+                    </select>
+                    @error('status')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+            </div>
 
-                <select
-                    name="priority"
-                    class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                >
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="form-group">
+                    <label class="form-label">Deadline *</label>
+                    <input type="date" name="deadline" class="form-control" value="{{ old('deadline', \Carbon\Carbon::parse($task->deadline)->format('Y-m-d')) }}" required>
+                    @error('deadline')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
 
-                    <option value="Low"
-                        {{ $task->priority == 'Low' ? 'selected' : '' }}>
-                        Low
-                    </option>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select name="category_id" class="form-control">
+                        <option value="">No category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id', $task->category_id) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
 
-                    <option value="Medium"
-                        {{ $task->priority == 'Medium' ? 'selected' : '' }}>
-                        Medium
-                    </option>
-
-                    <option value="High"
-                        {{ $task->priority == 'High' ? 'selected' : '' }}>
-                        High
-                    </option>
-
+            <div class="form-group">
+                <label class="form-label">Assign To</label>
+                <select name="assigned_to" class="form-control">
+                    <option value="">Unassigned</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ old('assigned_to', $task->assigned_to) == $user->id ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
                 </select>
-
             </div>
 
-            <!-- Status -->
-            <div class="mb-6">
-
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Status
-                </label>
-
-                <select
-                    name="status"
-                    class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-green-400 focus:outline-none"
-                >
-
-                    <option value="Pending"
-                        {{ $task->status == 'Pending' ? 'selected' : '' }}>
-                        Pending
-                    </option>
-
-                    <option value="In Progress"
-                        {{ $task->status == 'In Progress' ? 'selected' : '' }}>
-                        In Progress
-                    </option>
-
-                    <option value="Completed"
-                        {{ $task->status == 'Completed' ? 'selected' : '' }}>
-                        Completed
-                    </option>
-
-                </select>
-
+            <div style="display:flex;gap:10px;margin-top:8px;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{{ route('tasks.show', $task) }}" class="btn btn-ghost">Cancel</a>
             </div>
-
-            <!-- Buttons -->
-            <div class="flex gap-4">
-
-                <button
-                    type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
-                >
-                    Update Task
-                </button>
-
-                <a
-                    href="/tasks"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-xl transition"
-                >
-                    Cancel
-                </a>
-
-            </div>
-
         </form>
-
     </div>
+</div>
 
-</x-app-layout>
+@endsection
