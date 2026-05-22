@@ -1,49 +1,83 @@
-<x-app-layout>
+@extends('layouts.app')
 
-<div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
+@section('title', 'Create Task')
 
-    <h1 class="text-2xl font-bold mb-6">
-        Create Task
-    </h1>
+@section('topbar-actions')
+    <a href="{{ route('tasks.index') }}" class="btn btn-ghost">← Back to Tasks</a>
+@endsection
 
-    <form method="POST" action="/tasks">
+@section('content')
 
-        @csrf
+<div style="max-width:680px;">
+    <div class="card">
+        <form method="POST" action="{{ route('tasks.store') }}">
+            @csrf
 
-        <div class="mb-4">
-            <label class="block mb-2">Title</label>
+            <div class="form-group">
+                <label class="form-label">Task Title *</label>
+                <input type="text" name="title" class="form-control" placeholder="What needs to be done?" value="{{ old('title') }}" required>
+                @error('title')<div class="form-error">{{ $message }}</div>@enderror
+            </div>
 
-            <input type="text"
-                   name="title"
-                   class="w-full border rounded p-2">
-        </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" rows="4" placeholder="Add more details about this task...">{{ old('description') }}</textarea>
+                @error('description')<div class="form-error">{{ $message }}</div>@enderror
+            </div>
 
-        <div class="mb-4">
-            <label class="block mb-2">Description</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="form-group">
+                    <label class="form-label">Priority *</label>
+                    <select name="priority" class="form-control" required>
+                        <option value="">Select priority</option>
+                        <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>🟢 Low</option>
+                        <option value="medium" {{ old('priority') == 'medium' ? 'selected' : '' }}>🟡 Medium</option>
+                        <option value="high" {{ old('priority') == 'high' ? 'selected' : '' }}>🔴 High</option>
+                    </select>
+                    @error('priority')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
 
-            <textarea name="description"
-                      class="w-full border rounded p-2"></textarea>
-        </div>
+                <div class="form-group">
+                    <label class="form-label">Deadline *</label>
+                    <input type="date" name="deadline" class="form-control" value="{{ old('deadline') }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
+                    @error('deadline')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+            </div>
 
-        <div class="mb-4">
-            <label class="block mb-2">Priority</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select name="category_id" class="form-control">
+                        <option value="">No category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
 
-            <select name="priority"
-                    class="w-full border rounded p-2">
+                <div class="form-group">
+                    <label class="form-label">Assign To</label>
+                    <select name="assigned_to" class="form-control">
+                        <option value="">Unassigned</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ old('assigned_to') == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('assigned_to')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+            </div>
 
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
-
-            </select>
-        </div>
-
-        <button class="bg-blue-500 text-white px-4 py-2 rounded">
-            Save Task
-        </button>
-
-    </form>
-
+            <div style="display:flex;gap:10px;margin-top:8px;">
+                <button type="submit" class="btn btn-primary">Create Task</button>
+                <a href="{{ route('tasks.index') }}" class="btn btn-ghost">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 
-</x-app-layout>
+@endsection

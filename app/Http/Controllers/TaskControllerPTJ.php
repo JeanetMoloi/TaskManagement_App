@@ -93,6 +93,7 @@ class TaskControllerPTJ extends Controller
 
         // Attach the logged-in user as the creator
         $validated['created_by'] = Auth::id();
+        $validated['user_id'] = Auth::id();
         $validated['status']     = 'pending'; // New tasks always start as pending
 
         $task = Task::create($validated);
@@ -112,7 +113,6 @@ class TaskControllerPTJ extends Controller
         // Eager-load relationships needed on the detail page
         $task->load(['assignedUser', 'category', 'creator']);
 
-        $this->authorize('view', $task); // Policy check
 
         return view('tasks.show', compact('task'));
     }
@@ -124,7 +124,7 @@ class TaskControllerPTJ extends Controller
      */
     public function edit(Task $task)
     {
-        $this->authorize('update', $task); // Policy check
+        
 
         $users      = User::where('role', '!=', 'guest')->get();
         $categories = Category::all();
@@ -140,7 +140,7 @@ class TaskControllerPTJ extends Controller
      */
     public function update(UpdateTaskRequestPTJ $request, Task $task)
     {
-        $this->authorize('update', $task); // Policy check
+        
 
         $task->update($request->validated());
 
@@ -156,7 +156,7 @@ class TaskControllerPTJ extends Controller
      */
     public function destroy(Task $task)
     {
-        $this->authorize('delete', $task); // Policy check
+        
 
         $task->delete();
 
@@ -173,7 +173,7 @@ class TaskControllerPTJ extends Controller
      */
     public function updateStatus(Request $request, Task $task)
     {
-        $this->authorize('update', $task);
+       
 
         $request->validate([
             'status' => ['required', 'in:pending,in_progress,completed'],

@@ -57,7 +57,7 @@ class DashboardControllerPTJ extends Controller
             ->orderBy('deadline')
             ->take(5)->get();
 
-        return view('dashboard.admin', compact('stats', 'recentTasks', 'overdueTasks'));
+        return view('dashboard', compact('stats', 'recentTasks', 'overdueTasks'));
     }
 
     /**
@@ -80,7 +80,7 @@ class DashboardControllerPTJ extends Controller
                                      ->where('status', '!=', 'completed')->count(),
         ];
 
-        return view('dashboard.team_member', compact('myTasks', 'stats'));
+        return view('dashboard', compact('myTasks', 'stats'));
     }
 
     /**
@@ -93,6 +93,6 @@ class DashboardControllerPTJ extends Controller
             ->orderBy('deadline')
             ->get();
 
-        return view('dashboard.guest', compact('tasks'));
+        return view('dashboard', compact('tasks'));
     }
 }
