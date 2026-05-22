@@ -1,66 +1,134 @@
 <x-app-layout>
 
-    <div class="py-6 px-6">
+<div class="py-10 px-6 bg-gray-100 min-h-screen">
 
-        <h1 class="text-3xl font-bold mb-6">
-            Task Dashboard
-        </h1>
+<!-- Page Header -->
+<div class="flex justify-between items-center mb-8">
 
-        <a href="/tasks/create"
-           class="bg-blue-500 text-white px-4 py-2 rounded">
-            Add Task
-        </a>
+<div>
+<h1 class="text-4xl font-bold text-gray-800">
+Task Dashboard
+</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+<p class="text-gray-500 mt-1">
+Manage your tasks efficiently
+</p>
+</div>
 
-            @foreach($tasks as $task)
+<!-- Add Task Button -->
+<a href="/tasks/create"
+class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow-lg transition">
 
-                <div class="bg-white shadow-lg rounded-xl p-6">
++ Add Task
 
-                    <h2 class="text-xl font-bold">
-                        {{ $task->title }}
-                    </h2>
+</a>
 
-                    <p class="text-gray-600 mt-2">
-                        {{ $task->description }}
-                    </p>
+</div>
 
-                    <div class="mt-4">
-                        <span class="font-bold">
-                            Status:
-                        </span>
+<!-- Task Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                        {{ $task->status }}
-                    </div>
+@forelse($tasks as $task)
 
-                    <div>
-                        <span class="font-bold">
-                            Priority:
-                        </span>
+<div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition">
 
-                        {{ $task->priority }}
-                    </div>
+<!-- Task Title -->
+<h2 class="text-2xl font-bold text-gray-800 mb-3">
 
-                    <div class="mt-4 flex gap-2">
+{{ $task->title }}
 
-                        <a href="/tasks/{{ $task->id }}/edit"
-                           class="bg-yellow-500 text-white px-3 py-1 rounded">
-                            Edit
-                        </a>
+</h2>
 
-                        <a href="/tasks/{{ $task->id }}"
-                           class="bg-green-500 text-white px-3 py-1 rounded">
-                            View
-                        </a>
+<!-- Description -->
+<p class="text-gray-600 mb-4">
 
-                    </div>
+{{ $task->description }}
 
-                </div>
+</p>
 
-            @endforeach
+<!-- Status -->
+<div class="mb-2">
 
-        </div>
+<span class="font-semibold text-gray-700">
+Status:
+</span>
 
-    </div>
+<span class="text-blue-600 font-medium">
+
+{{ $task->status }}
+
+</span>
+
+</div>
+
+<!-- Priority -->
+<div class="mb-4">
+
+<span class="font-semibold text-gray-700">
+Priority:
+</span>
+
+<span class="text-red-500 font-medium">
+
+{{ $task->priority }}
+
+</span>
+
+</div>
+
+<!-- Buttons -->
+<div class="flex gap-3 mt-5">
+
+<!-- View -->
+<a href="/tasks/{{ $task->id }}"
+class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
+
+View
+
+</a>
+
+<!-- Edit -->
+<a href="/tasks/{{ $task->id }}/edit"
+class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition">
+
+Edit
+
+</a>
+
+</div>
+
+</div>
+
+@empty
+
+<!-- Empty State -->
+<div class="col-span-3">
+
+<div class="bg-white rounded-2xl shadow-lg p-10 text-center">
+
+<h2 class="text-2xl font-bold text-gray-700 mb-3">
+No Tasks Yet
+</h2>
+
+<p class="text-gray-500 mb-5">
+Start by creating your first task.
+</p>
+
+<a href="/tasks/create"
+class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl transition">
+
+Create Task
+
+</a>
+
+</div>
+
+</div>
+
+@endforelse
+
+</div>
+
+</div>
 
 </x-app-layout>
