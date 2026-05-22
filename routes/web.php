@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskControllerPTJ;
 use App\Http\Controllers\CategoryControllerPTJ;
-use App\Https\Controllers\DashboardControllerPTJ;
+use App\Http\Controllers\DashboardControllerPTJ;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
