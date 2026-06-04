@@ -1,4 +1,20 @@
 <x-guest-layout>
+
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-blue-600">
+            Task Management App
+        </h1>
+
+        <p class="text-gray-600 mt-2">
+            Organize, track and complete your tasks efficiently.
+        </p>
+    </div>
+
+    
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <form method="POST" action="{{ route('login') }}">
+        <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

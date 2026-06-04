@@ -20,6 +20,17 @@
             <x-primary-button>
                 {{ __('Email Password Reset Link') }}
             </x-primary-button>
+            <x-guest-layout>
+
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-blue-600">
+            Forgot Password
+        </h1>
+
+        <p class="text-gray-600">
+            Enter your email and we'll send you a reset link.
+        </p>
+    </div>
         </div>
     </form>
 </x-guest-layout>

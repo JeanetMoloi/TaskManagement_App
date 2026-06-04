@@ -1,4 +1,16 @@
 <x-guest-layout>
+
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-blue-600">
+            Create Your Account
+        </h1>
+
+        <p class="text-gray-600 mt-2">
+            Join the Task Management App and start managing your work.
+        </p>
+    </div>
+    
+    <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
