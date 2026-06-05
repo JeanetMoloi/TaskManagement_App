@@ -34,14 +34,18 @@ class TaskPolicyPTJ
         return true;
     }
 
-    /**
-     * User can view a task if they created it or are assigned to it.
-     */
+    
     public function view(User $user, Task $task): bool
-    {
-        return $user->id === $task->assigned_to
-            || $user->id === $task->created_by;
+{
+    // Admin can see all (handled by before())
+    // Team members can see tasks assigned to them, created by them, or any task
+    if ($user->role === 'team_member' || $user->role === 'member') {
+        return true;
     }
+
+    // Guests can only see tasks they created
+    return $user->id === $task->created_by;
+}
 
     /**
      * Guests cannot create tasks.
