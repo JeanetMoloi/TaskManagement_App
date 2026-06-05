@@ -19,6 +19,7 @@
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
 
+
         <div>
             <x-input-label for="email" :value="__('Email')" />
 
