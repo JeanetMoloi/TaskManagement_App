@@ -257,5 +257,5 @@ MAIL_FROM_NAME="TaskFlow"
 
 ---
 
-*ICE360S | Web Frameworks 2 | 2026*
+*ICE362S | Web Frameworks 3 | 2026*
 
