@@ -9,27 +9,25 @@ use App\Models\User;
  * TaskPolicyPTJ
  *
  * Defines authorization rules for task actions.
- * Used in the controller via $this->authorize('action', $task).
- *
- * Register in AuthServiceProvider (or auto-discovered in Laravel 12).
+ * Used in the controller via Gate::allows/denies.
+ * Naming convention: suffixed with PTJ (Pertunia, Thandeka, Jeanet).
  */
 class TaskPolicyPTJ
 {
     /**
-     * 
-     * This method is called first before any other policy method.
+     * Admins bypass all checks.
+     * Called first before any other policy method.
      */
     public function before(User $user): ?bool
     {
         if ($user->role === 'admin') {
-            return true; // Admin always allowed
+            return true;
         }
-        return null; // null means "continue to the specific policy method"
+        return null;
     }
 
     /**
-     * Can the user see the task list?
-     * All authenticated users can view the index (controller filters by role).
+     * All authenticated users can view the task list.
      */
     public function viewAny(User $user): bool
     {
@@ -37,9 +35,7 @@ class TaskPolicyPTJ
     }
 
     /**
-     * Can the user view a specific task?
-     * Team members can see tasks assigned to them or created by them.
-     * Guests can only see tasks they created.
+     * User can view a task if they created it or are assigned to it.
      */
     public function view(User $user, Task $task): bool
     {
@@ -48,7 +44,6 @@ class TaskPolicyPTJ
     }
 
     /**
-     * Can the user create tasks?
      * Guests cannot create tasks.
      */
     public function create(User $user): bool
@@ -57,18 +52,20 @@ class TaskPolicyPTJ
     }
 
     /**
-     * Can the user edit/update a task?
-     * Team members can edit tasks assigned to them or that they created.
+     * User can update a task if they created it or are assigned to it.
+     * Supports both 'team_member' and 'member' role names.
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->role === 'team_member'
-            && ($user->id === $task->assigned_to || $user->id === $task->created_by);
+        $allowedRoles = ['team_member', 'member'];
+
+        return in_array($user->role, $allowedRoles)
+            && ($user->id === $task->assigned_to
+                || $user->id === $task->created_by);
     }
 
     /**
-     * Can the user delete a task?
-     * Only admins (handled by before()) and the original creator can delete.
+     * Only the creator or admin can delete a task.
      */
     public function delete(User $user, Task $task): bool
     {

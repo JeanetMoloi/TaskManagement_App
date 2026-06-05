@@ -13,11 +13,7 @@ use Illuminate\Http\Request;
  */
 class CategoryControllerPTJ extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('role:admin'); // Only admins manage categories
-    }
+    
 
     
     public function index()

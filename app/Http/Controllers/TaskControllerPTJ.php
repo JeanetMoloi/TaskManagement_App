@@ -9,27 +9,20 @@ use App\Models\User;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * TaskControllerPTJ
  *
  * Handles all task-related HTTP logic for the Task Management App.
  * Covers: listing, creating, editing, updating, deleting, and status changes.
- *
- * Naming convention: suffixed with group member initials (PTJ ).
+ * Naming convention: suffixed with group member initials (PTJ).
  */
 class TaskControllerPTJ extends Controller
 {
     /**
-     * Apply auth middleware to all routes in this controller.
-     * Guest users cannot access any task functionality.
-     */
-    
-
-    /**
      * Display a listing of tasks.
-     * Admins see all tasks; team
-     *
+     * Admins see all tasks; team members see assigned or own tasks.
      * Route: GET /tasks
      */
     public function index(Request $request)
@@ -43,17 +36,17 @@ class TaskControllerPTJ extends Controller
                   ->orWhere('created_by', $user->id);
             });
 
-        // Filter by status (optional query param: ?status=pending)
+        // Filter by status (?status=pending)
         $query->when($request->filled('status'), fn($q) =>
             $q->where('status', $request->status)
         );
 
-        // Filter by priority (optional query param: ?priority=high)
+        // Filter by priority (?priority=high)
         $query->when($request->filled('priority'), fn($q) =>
             $q->where('priority', $request->priority)
         );
 
-        // Filter by category (optional query param: ?category_id=2)
+        // Filter by category (?category_id=2)
         $query->when($request->filled('category_id'), fn($q) =>
             $q->where('category_id', $request->category_id)
         );
@@ -68,12 +61,15 @@ class TaskControllerPTJ extends Controller
 
     /**
      * Show the form for creating a new task.
-     *
      * Route: GET /tasks/create
      */
     public function create()
     {
-        // Pass all users (for assignment) and categories to the view
+        // Gate check — guests cannot create tasks
+        if (Gate::denies('create', Task::class)) {
+            abort(403, 'You do not have permission to create tasks.');
+        }
+
         $users      = User::where('role', '!=', 'guest')->get();
         $categories = Category::all();
 
@@ -82,19 +78,22 @@ class TaskControllerPTJ extends Controller
 
     /**
      * Store a newly created task in the database.
-     * Validation is handled by StoreTaskRequestPTJ (Form Request class).
-     *
+     * Validation handled by StoreTaskRequestPTJ.
      * Route: POST /tasks
      */
     public function store(StoreTaskRequestPTJ $request)
     {
-        // Validated data from the Form Request (safe to use directly)
+        // Gate check — guests cannot create tasks
+        if (Gate::denies('create', Task::class)) {
+            abort(403, 'You do not have permission to create tasks.');
+        }
+
         $validated = $request->validated();
 
         // Attach the logged-in user as the creator
         $validated['created_by'] = Auth::id();
-        $validated['user_id'] = Auth::id();
-        $validated['status']     = 'pending'; // New tasks always start as pending
+        $validated['user_id']    = Auth::id();
+        $validated['status']     = 'pending';
 
         $task = Task::create($validated);
 
@@ -105,26 +104,30 @@ class TaskControllerPTJ extends Controller
 
     /**
      * Display a single task.
-     *
      * Route: GET /tasks/{task}
      */
     public function show(Task $task)
     {
-        // Eager-load relationships needed on the detail page
-        $task->load(['assignedUser', 'category', 'creator']);
+        // Gate check — only assigned user, creator, or admin can view
+        if (Gate::denies('view', $task)) {
+            abort(403, 'You do not have permission to view this task.');
+        }
 
+        $task->load(['assignedUser', 'category', 'creator']);
 
         return view('tasks.show', compact('task'));
     }
 
     /**
      * Show the form for editing an existing task.
-     *
      * Route: GET /tasks/{task}/edit
      */
     public function edit(Task $task)
     {
-        
+        // Gate check — only creator, assigned user, or admin can edit
+        if (Gate::denies('update', $task)) {
+            abort(403, 'You do not have permission to edit this task.');
+        }
 
         $users      = User::where('role', '!=', 'guest')->get();
         $categories = Category::all();
@@ -135,12 +138,14 @@ class TaskControllerPTJ extends Controller
     /**
      * Update an existing task in the database.
      * Validation handled by UpdateTaskRequestPTJ.
-     *
      * Route: PUT /tasks/{task}
      */
     public function update(UpdateTaskRequestPTJ $request, Task $task)
     {
-        
+        // Gate check
+        if (Gate::denies('update', $task)) {
+            abort(403, 'You do not have permission to update this task.');
+        }
 
         $task->update($request->validated());
 
@@ -151,12 +156,14 @@ class TaskControllerPTJ extends Controller
 
     /**
      * Remove a task from the database.
-     *
      * Route: DELETE /tasks/{task}
      */
     public function destroy(Task $task)
     {
-        
+        // Gate check — only creator or admin can delete
+        if (Gate::denies('delete', $task)) {
+            abort(403, 'You do not have permission to delete this task.');
+        }
 
         $task->delete();
 
@@ -167,13 +174,14 @@ class TaskControllerPTJ extends Controller
 
     /**
      * Update only the status of a task.
-     * Useful for quick status toggles (e.g., Kanban-style drag-drop or buttons).
-     *
      * Route: PATCH /tasks/{task}/status
      */
     public function updateStatus(Request $request, Task $task)
     {
-       
+        // Gate check
+        if (Gate::denies('update', $task)) {
+            abort(403, 'You do not have permission to update this task.');
+        }
 
         $request->validate([
             'status' => ['required', 'in:pending,in_progress,completed'],
