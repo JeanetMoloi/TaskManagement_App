@@ -1,59 +1,261 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TaskFlow — Task Management App
+> ICE362S | T2 Laravel Project | 2026
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-featured Task Management web application built with **Laravel 12**, featuring role-based access control, task categories, priorities, deadlines, and a beautiful dark UI.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 👥 Group Members
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Name | Initials | Role |
+|---|---|---|
+| Pertunia Sifunda-221692568| P | Controllers, Routes, Middleware, Validation |
+| Thandeka Malande-222857005 | T | Models, Database, Eloquent ORM |
+| Jeanet Moloi-230186904| J | Blade Views, Frontend, Authentication |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+> **Naming Convention:** All Controllers, Models, and Policies are suffixed with **PTJ** as per project guidelines.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🛠️ Technology Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Technology | Version |
+|---|---|
+| PHP | 8.2+ |
+| Laravel | 12.x |
+| Authentication | Laravel Breeze |
+| Frontend | Blade Templates + Tailwind CSS |
+| Database | SQLite (local) / MySQL (production) |
+| Version Control | Git + GitHub |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🚀 Setup & Installation
 
-### Premium Partners
+### Prerequisites
+Make sure you have the following installed:
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+- Git
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Step 1 — Clone the repository
+```bash
+git clone https://github.com/JeanetMoloi/TaskManagement_App.git
+cd TaskManagement_App
+```
 
-## Contributing
+### Step 2 — Install PHP dependencies
+```bash
+composer install
+```
+> If you get a `doctrine/lexer` error, run `composer update doctrine/lexer` first.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Step 3 — Set up environment file
+```bash
+cp .env.example .env        # Linux/Mac
+copy .env.example .env      # Windows
+```
 
-## Code of Conduct
+### Step 4 — Generate application key
+```bash
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Step 5 — Run database migrations
+```bash
+php artisan migrate
+```
 
-## Security Vulnerabilities
+### Step 6 — Seed the database with test data
+```bash
+php artisan db:seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Step 7 — Install frontend dependencies
+```bash
+npm install
+npm run build
+```
 
-## License
+### Step 8 — Start the development server
+```bash
+php -S localhost:8000 -t public
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Step 9 — Open in browser
+```
+http://localhost:8000
+```
+
+---
+
+## 🔐 Test Accounts
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@example.com | password |
+| Team Member | thandeka@example.com | password |
+| Guest | guest@example.com | password |
+
+> You can also register a new account at `/register`
+
+---
+
+## 📱 Application Features
+
+### Task Management
+- ✅ Create, edit, delete tasks
+- ✅ Assign tasks to specific users
+- ✅ Set task priority (Low, Medium, High)
+- ✅ Update task status (Pending, In Progress, Completed)
+- ✅ Set deadlines with overdue warnings
+- ✅ Filter tasks by status and priority
+
+### Categories
+- ✅ Admin can create and manage task categories
+- ✅ Tasks can be assigned to categories
+- ✅ Color-coded category badges
+
+### User Roles
+| Role | Permissions |
+|---|---|
+| **Admin** | Full access — manage all tasks, users, and categories |
+| **Team Member** | Create and manage their own tasks, view assigned tasks |
+| **Guest** | View only — cannot create or edit tasks |
+
+### Dashboard
+- ✅ Role-specific dashboards
+- ✅ Task statistics (Total, Pending, In Progress, Completed)
+- ✅ Recent tasks overview
+- ✅ Overdue task warnings
+
+---
+
+## 🗄️ Database Schema
+
+### Users Table
+| Column | Type | Description |
+|---|---|---|
+| id | integer | Primary key |
+| name | string | User's full name |
+| email | string | Unique email address |
+| role | enum | admin, team_member, guest |
+| password | string | Hashed password |
+
+### Tasks Table
+| Column | Type | Description |
+|---|---|---|
+| id | integer | Primary key |
+| title | string | Task title |
+| description | text | Task description |
+| status | enum | pending, in_progress, completed |
+| priority | enum | low, medium, high |
+| deadline | datetime | Task deadline |
+| user_id | foreignId | Owner of the task |
+| assigned_to | foreignId | User assigned to task |
+| created_by | foreignId | User who created task |
+| category_id | foreignId | Task category |
+
+### Categories Table
+| Column | Type | Description |
+|---|---|---|
+| id | integer | Primary key |
+| name | string | Category name (unique) |
+| description | string | Category description |
+| color | string | Hex color code |
+
+---
+
+## 📁 Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── TaskControllerPTJ.php       ← Task CRUD
+│   │   ├── CategoryControllerPTJ.php   ← Category management
+│   │   └── DashboardControllerPTJ.php  ← Role dashboards
+│   ├── Middleware/
+│   │   ├── RoleMiddlewarePTJ.php       ← Role-based access
+│   │   └── LogActivityMiddlewarePTJ.php← Activity logging
+│   └── Requests/
+│       ├── StoreTaskRequestPTJ.php     ← Create validation
+│       └── UpdateTaskRequestPTJ.php    ← Update validation
+├── Models/
+│   ├── Task.php                        ← Task model
+│   ├── Category.php                    ← Category model
+│   └── User.php                        ← User model
+└── Policies/
+    └── TaskPolicyPTJ.php               ← Authorization policy
+routes/
+└── web.php                             ← All application routes
+resources/views/
+├── layouts/
+│   └── app.blade.php                   ← Main layout
+├── tasks/
+│   ├── index.blade.php                 ← Task list
+│   ├── create.blade.php                ← Create form
+│   ├── edit.blade.php                  ← Edit form
+│   └── show.blade.php                  ← Task detail
+└── dashboard.blade.php                 ← Dashboard
+```
+
+---
+
+## 🔒 Security Features
+
+- ✅ CSRF protection on all forms (`@csrf`)
+- ✅ XSS prevention using Blade's `{{ }}` escaping
+- ✅ SQL injection prevention via Eloquent ORM
+- ✅ Role-based middleware on all sensitive routes
+- ✅ Password hashing using Laravel's Hash facade
+- ✅ Authentication via Laravel Breeze
+
+---
+
+## 🎨 UI Template
+
+The frontend UI was custom designed using:
+- **Blade Templating Engine** for dynamic views
+- **Tailwind CSS** for styling
+- **Google Fonts** — Syne (headings) and DM Sans (body)
+- Dark theme with purple accent colors
+
+---
+
+## 📋 Git Workflow
+
+- Each team member worked on their own **forked repository**
+- Changes were submitted via **Pull Requests** to the main repository
+- Pull requests were reviewed and merged by the repository owner
+- Commit messages follow the format: `feat:`, `fix:`, `docs:`
+
+---
+
+## ⚙️ Environment Variables
+
+Key variables in `.env`:
+
+```env
+APP_NAME=TaskFlow
+APP_ENV=local
+DB_CONNECTION=sqlite
+MAIL_MAILER=smtp
+MAIL_FROM_ADDRESS="noreply@taskflow.com"
+MAIL_FROM_NAME="TaskFlow"
+```
+
+---
+
+## 👩‍💻 Development Challenges
+
+- Configuring role-based middleware in Laravel 12 (constructor middleware was removed)
+- Managing database migrations across team members with different setups
+- Integrating the custom dark UI theme with Blade components
+- Resolving Git merge conflicts when combining team members' work
+
+---
+
+*ICE360S | Web Frameworks 2 | 2026*
+
